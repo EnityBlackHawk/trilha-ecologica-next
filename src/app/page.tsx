@@ -4,6 +4,10 @@ import { Button, TextField, styled } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { PlantInfo } from "@/types";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "@/../tailwind.config";
+
+const { theme } = resolveConfig(tailwindConfig);
 
 /* 
 
@@ -46,34 +50,5 @@ const objPlantInfo: PlantInfo = {
 export default function Home() {
   const [inputData, setInputData] = useState<PlantInfo>(objPlantInfo);
   const [test, setTest] = useState<string>("");
-  return (
-    <div className="w-full flex justify-center items-center flex-col">
-      <div className="grid grid-cols-2 gap-5 w-1/2 p-5">
-        {Object.keys(objPlantInfo).map((e: keyof PlantInfo, i) => {
-          return (
-            <div key={i} className="grid grid-cols-1">
-              <h2>{objPlantInfo[e].name}</h2>
-              <TextField
-                className="text-lg"
-                variant="filled"
-                value={inputData[e].value}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(c) => {
-                  setInputData({
-                    ...inputData,
-                    [e]: c.currentTarget.value,
-                  });
-                }}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <Button variant="contained" sx={{ width: "30%" }}>
-        Salvar
-      </Button>
-    </div>
-  );
+  return (<div></div>)
 }
