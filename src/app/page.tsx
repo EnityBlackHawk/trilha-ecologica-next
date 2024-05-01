@@ -3,6 +3,7 @@
 import { Button, TextField, styled } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { PlantInfo } from "@/types";
 
 /* 
 
@@ -23,24 +24,6 @@ classTaxonomica: "Gimnosperma",
     produtos: "MADEIRA, FRUTO",
 
 */
-
-type PlantInfo = {
-  classTaxonomica: { value: string; name: string };
-  familiaBotanica: { value: string; name: string };
-  grauAmeaca: { value: string; name: string };
-  nomePopular: { value: string; name: string };
-  nomeCientifico: { value: string; name: string };
-  biomaEstados: { value: string; name: string };
-  extratoVertical: { value: string; name: string };
-  populacao: { value: string; name: string };
-  DAP: { value: string; name: string };
-  solos: { value: string; name: string };
-  idadeMaxima: { value: string; name: string };
-  altitude: { value: string; name: string };
-  dispersores: { value: string; name: string };
-  estagio: { value: string; name: string };
-  produtos: { value: string; name: string };
-};
 
 const objPlantInfo: PlantInfo = {
   classTaxonomica: { value: "", name: "Class Taxonomica" },
