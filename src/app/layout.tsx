@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import Image from "next/image";
+import logo from "@/../public/logo-trilha.png"
+import Navbar from "@/components/navbar";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +24,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <AppBar position="static" sx={{ backgroundColor: "#AFD6C4" }}>
           <Toolbar>
+            <Image src={logo} width={50} height={50} alt="logo" className="m-2"/>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: "black" }}>
-              News
+              Trilha Ecológica UTFPR
             </Typography>
+            <Navbar />
           </Toolbar>
         </AppBar>
         {children}

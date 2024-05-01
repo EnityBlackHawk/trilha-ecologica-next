@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextField, styled } from "@mui/material";
+import { Backdrop, Button, CircularProgress, TextField, styled } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { PlantInfo } from "@/types";
@@ -52,6 +52,7 @@ const objPlantInfo: PlantInfo = {
 export default function Home() {
   const [inputData, setInputData] = useState<PlantInfo>(objPlantInfo);
   const [qrUrl, setQrUrl] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="w-full flex justify-center items-center flex-row">
       <div className="w-1/2">
@@ -96,19 +97,22 @@ export default function Home() {
             onClick={async () => {
               const o = Object.keys(inputData);
               let allValid = true;
-              for (let i = 0; i < o.length; i++) {
-                if (inputData[o[i] as keyof PlantInfo].value.length < 1) {
-                  alert(o[i] as keyof PlantInfo);
-                  allValid = false;
-                  break;
-                }
-              }
+              // for (let i = 0; i < o.length; i++) {
+              //   if (inputData[o[i] as keyof PlantInfo].value.length < 1) {
+              //     alert(o[i] as keyof PlantInfo);
+              //     allValid = false;
+              //     break;
+              //   }
+              // }
               if (allValid) {
+                setIsLoading(true);
+                setInputData(objPlantInfo);
                 setQrUrl("");
                 const result = await save(inputData);
                 setQrUrl(
                   `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.data.id}`
                 );
+                setIsLoading(false);
               }
             }}
           >
@@ -127,6 +131,12 @@ export default function Home() {
           />
         )}
       </div>
+      <Backdrop
+        sx={{ color: "#fff"}}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }
