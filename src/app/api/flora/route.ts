@@ -2,9 +2,9 @@ import {db, storage} from "@/firebase";
 import { collection } from "firebase/firestore";
 import { NextRequest } from "next/server";
 import { PlantInfo } from "@/types";
-import { ref, uploadBytes } from "firebase/storage";
+import { getBlob, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-type PlantInfoWithImage = PlantInfo & { image: string };
+export type PlantInfoWithImage = PlantInfo & { image: string };
 
 export async function POST(request : NextRequest){
     const data : FormData = await request.formData();
@@ -23,7 +23,11 @@ export async function POST(request : NextRequest){
 
 export async function GET(){
     const result = await db.collection("flora").get();
-    return Response.json(result.docs.map((e) => e.data()));
+    const data =  result.docs.map((e) => e.data());
+    const data_i = data.map(async (e) => {
+        const image = await getDownloadURL(ref(storage, e.image));
+        return {...e, image}})
+    return Response.json(await Promise.all(data_i));
 }
 
 export async function DELETE(request : NextRequest){

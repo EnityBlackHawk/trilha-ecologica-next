@@ -7,17 +7,85 @@ import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "@/../tailwind.config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PlantInfoWithImage } from "../api/flora/route";
+import Card from "@/components/card";
+import _Card from "@/components/card";
 
 const { theme } = resolveConfig(tailwindConfig);
 
+const mock = [
+  {
+    familiaBotanica: {
+      name: "Familia Botanica",
+      value: "Teste",
+    },
+    biomaEstados: {
+      name: "Bioma Estados",
+      value: "Teste",
+    },
+    solos: {
+      value: "Teste",
+      name: "Solos",
+    },
+    nomePopular: {
+      value: "Teste",
+      name: "Nome Popular",
+    },
+    idadeMaxima: {
+      name: "Idade Maxima",
+      value: "Teste",
+    },
+    nomeCientifico: {
+      name: "Nome Cientifico",
+      value: "Teste",
+    },
+    dispersores: {
+      name: "Dispersores",
+      value: "Teste",
+    },
+    grauAmeaca: {
+      name: "Grau Ameaca",
+      value: "Teste",
+    },
+    DAP: {
+      value: "Teste",
+      name: "DAP",
+    },
+    extratoVertical: {
+      value: "Teste",
+      name: "Extrato Vertical",
+    },
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/utfpr-trilha.appspot.com/o/flora%2FTeste.png?alt=media&token=7ee6902b-4876-4c2b-87a9-050da2da2c2c",
+    populacao: {
+      value: "Teste",
+      name: "Populacao",
+    },
+    produtos: {
+      name: "Produtos",
+      value: "Teste",
+    },
+    altitude: {
+      value: "Teste",
+      name: "Altitude",
+    },
+    classTaxonomica: {
+      name: "Class Taxonomica",
+      value: "Teste",
+    },
+    estagio: {
+      name: "Estagio",
+      value: "Teste",
+    },
+  },
+];
+
 export default function Flora() {
-  const [items, setItems] = useState<PlantInfo[]>([]);
+  const [items, setItems] = useState<PlantInfoWithImage[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    // axios.get("/api/flora").then((e) => {
-    //     setItems(e.data);
-    // })
+    setItems(mock);
   }, []);
 
   return (
@@ -46,9 +114,11 @@ export default function Flora() {
             Cadastrar
           </Button>
         </div>
-        {items.map((e) => {
-          return <h2 className="text-black">{e.nomeCientifico.value}</h2>;
-        })}
+        <div className="grid grid-cols-3 gap-5 p-5">
+          {[1, 2, 3].map((e) => {
+            return <_Card data={mock[0]}/>;
+          })}
+        </div>
       </div>
     </div>
   );
