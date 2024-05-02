@@ -3,7 +3,7 @@ import { PlantInfo } from "@/types";
 import axios from "axios";
 import { ref, uploadBytes } from "firebase/storage";
 
-export async function save(data: PlantInfo, image: File) {
+export async function save(data: PlantInfo, image: File, id : string | undefined | null) {
   const fr = new FileReader();
   fr.readAsArrayBuffer(image);
   const byteArray = await image.arrayBuffer();
@@ -15,6 +15,7 @@ export async function save(data: PlantInfo, image: File) {
   // });
   const formData = new FormData();
   formData.append("image", image);
+  formData.append("id", id ?? "");
   formData.append("data", JSON.stringify(data));
 
   const request = await fetch("/api/flora", {

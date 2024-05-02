@@ -1,4 +1,4 @@
-export type PlantInfo = {
+export interface PlantInfo {
   classTaxonomica: { value: string; name: string };
   familiaBotanica: { value: string; name: string };
   grauAmeaca: { value: string; name: string };

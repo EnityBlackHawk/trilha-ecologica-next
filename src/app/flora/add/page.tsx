@@ -4,13 +4,10 @@ import { Backdrop, Button, CircularProgress, TextField, styled } from "@mui/mate
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { PlantInfo } from "@/types";
-import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig from "@/../tailwind.config";
 import { save } from "./service";
 import { setRequestMeta } from "next/dist/server/request-meta";
-import { CloudUpload } from "@mui/icons-material";
-
-const { theme } = resolveConfig(tailwindConfig);
+import { AddComment, CloudUpload } from "@mui/icons-material";
+import AddComponent from "@/components/AddComponent";
 
 /* 
 
@@ -69,120 +66,121 @@ export default function Home() {
   const [image, setImage] = useState<File | null>();
 
   return (
-    <div className="w-full flex justify-center items-center flex-row">
-      <div className="w-1/2">
-        <h1 className="text-main font-bold text-4xl p-4 w-1/2 text-left">
-          Cadastrar Planta
-        </h1>
-        <div className="grid grid-cols-2 gap-5 p-5">
-          {
-          //@ts-expect-error
-          Object.keys(objPlantInfo).map((e: keyof PlantInfo, i) => {
-            return (
-              <div key={i} className="grid grid-cols-1">
-                <h2>{objPlantInfo[e].name}</h2>
-                <TextField
-                  className="text-lg"
-                  variant="filled"
-                  value={inputData[e].value}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(c) => {
-                    setInputData({
-                      ...inputData,
-                      [e]: {value : c.currentTarget.value, name : objPlantInfo[e].name},
-                    });
-                  }}
-                />
-              </div>
-            );
-          })}
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            startIcon={<CloudUpload />}
-            sx={{
-              width: "100%",
-              height: "75%",
-              alignSelf : "self-end",
-              //@ts-expect-error
-              backgroundColor: theme.colors.main,
-              color: "black",
-              ":hover": {
-                //@ts-expect-error
-                backgroundColor: theme.colors.main_darker,
-                color: "white",
-              },
-            }}
-          >
-            {image?.name ?? "Upload file"}
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(e) => {
-                setImage(e.target.files?.[0] ?? null);
-              }}
-            />
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              width: "30%",
-              //@ts-expect-error
-              backgroundColor: theme.colors.main,
-              color: "black",
-              ":hover": {
-                //@ts-expect-error
-                backgroundColor: theme.colors.main_darker,
-                color: "white",
-              },
-            }}
-            onClick={async () => {
-              const o = Object.keys(inputData);
-              let allValid = true;
-              if(image == null){
-                alert("Please upload an image");
-                allValid = false;
-              }
-              // for (let i = 0; i < o.length; i++) {
-              //   if (inputData[o[i] as keyof PlantInfo].value.length < 1) {
-              //     alert(o[i] as keyof PlantInfo);
-              //     allValid = false;
-              //     break;
-              //   }
-              // }
-              if (allValid) {
-                setIsLoading(true);
-                setQrUrl("");
-                const result = await save(inputData, image!!);
-                setQrUrl(
-                  `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
-                );
-                setInputData(objPlantInfo);
-                setImage(null);
-              }
-              setIsLoading(false);
-            }}
-          >
-            Salvar
-          </Button>
-        </div>
-      </div>
-      <div className="flex justify-center items-center w-1/3">
-        {qrUrl && (
-          <Image
-            className="border-main_darker border-8 p-2 rounded w-1/2"
-            src={qrUrl}
-            width={200}
-            height={200}
-            alt="Qr Code"
-          />
-        )}
-      </div>
-      <Backdrop sx={{ color: "#fff" }} open={isLoading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
+    <AddComponent<PlantInfo> title="Cadastrar Planta" baseObject={objPlantInfo} onSave={save} id={null}/>
+    // <div className="w-full flex justify-center items-center flex-row">
+    //   <div className="w-1/2">
+    //     <h1 className="text-main font-bold text-4xl p-4 w-1/2 text-left">
+    //       Cadastrar Planta
+    //     </h1>
+    //     <div className="grid grid-cols-2 gap-5 p-5">
+    //       {
+    //       //@ts-expect-error
+    //       Object.keys(objPlantInfo).map((e: keyof PlantInfo, i) => {
+    //         return (
+    //           <div key={i} className="grid grid-cols-1">
+    //             <h2>{objPlantInfo[e].name}</h2>
+    //             <TextField
+    //               className="text-lg"
+    //               variant="filled"
+    //               value={inputData[e].value}
+    //               InputLabelProps={{
+    //                 shrink: true,
+    //               }}
+    //               onChange={(c) => {
+    //                 setInputData({
+    //                   ...inputData,
+    //                   [e]: {value : c.currentTarget.value, name : objPlantInfo[e].name},
+    //                 });
+    //               }}
+    //             />
+    //           </div>
+    //         );
+    //       })}
+    //       <Button
+    //         component="label"
+    //         role={undefined}
+    //         variant="contained"
+    //         startIcon={<CloudUpload />}
+    //         sx={{
+    //           width: "100%",
+    //           height: "75%",
+    //           alignSelf : "self-end",
+    //           //@ts-expect-error
+    //           backgroundColor: theme.colors.main,
+    //           color: "black",
+    //           ":hover": {
+    //             //@ts-expect-error
+    //             backgroundColor: theme.colors.main_darker,
+    //             color: "white",
+    //           },
+    //         }}
+    //       >
+    //         {image?.name ?? "Upload file"}
+    //         <VisuallyHiddenInput
+    //           type="file"
+    //           onChange={(e) => {
+    //             setImage(e.target.files?.[0] ?? null);
+    //           }}
+    //         />
+    //       </Button>
+    //       <Button
+    //         variant="contained"
+    //         sx={{
+    //           width: "30%",
+    //           //@ts-expect-error
+    //           backgroundColor: theme.colors.main,
+    //           color: "black",
+    //           ":hover": {
+    //             //@ts-expect-error
+    //             backgroundColor: theme.colors.main_darker,
+    //             color: "white",
+    //           },
+    //         }}
+    //         onClick={async () => {
+    //           const o = Object.keys(inputData);
+    //           let allValid = true;
+    //           if(image == null){
+    //             alert("Please upload an image");
+    //             allValid = false;
+    //           }
+    //           // for (let i = 0; i < o.length; i++) {
+    //           //   if (inputData[o[i] as keyof PlantInfo].value.length < 1) {
+    //           //     alert(o[i] as keyof PlantInfo);
+    //           //     allValid = false;
+    //           //     break;
+    //           //   }
+    //           // }
+    //           if (allValid) {
+    //             setIsLoading(true);
+    //             setQrUrl("");
+    //             const result = await save(inputData, image!!);
+    //             setQrUrl(
+    //               `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
+    //             );
+    //             setInputData(objPlantInfo);
+    //             setImage(null);
+    //           }
+    //           setIsLoading(false);
+    //         }}
+    //       >
+    //         Salvar
+    //       </Button>
+    //     </div>
+    //   </div>
+    //   <div className="flex justify-center items-center w-1/3">
+    //     {qrUrl && (
+    //       <Image
+    //         className="border-main_darker border-8 p-2 rounded w-1/2"
+    //         src={qrUrl}
+    //         width={200}
+    //         height={200}
+    //         alt="Qr Code"
+    //       />
+    //     )}
+    //   </div>
+    //   <Backdrop sx={{ color: "#fff" }} open={isLoading}>
+    //     <CircularProgress color="inherit" />
+    //   </Backdrop>
+    // </div>
   );
 }

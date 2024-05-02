@@ -1,7 +1,6 @@
 import { PlantInfoWithImage } from "@/app/api/flora/route";
 import { Button, CardActions, CardContent, CardMedia, SxProps, Theme, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
-import { Butcherman } from "next/font/google";
 import Image from "next/image";
 
 export default function _Card({data} : {data : PlantInfoWithImage}) {
