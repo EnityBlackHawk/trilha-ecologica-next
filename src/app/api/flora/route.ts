@@ -47,9 +47,3 @@ export async function GET() {
   });
   return Response.json(await Promise.all(data_i));
 }
-
-export async function DELETE(request: NextRequest) {
-  const { id } = await request.json();
-  const result = await db.collection("flora").doc(id).delete();
-  return Response.json(result);
-}

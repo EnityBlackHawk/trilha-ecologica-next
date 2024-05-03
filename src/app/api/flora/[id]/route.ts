@@ -38,3 +38,17 @@ export async function GET(
   const image =  await getDownloadURL(ref(storage, data.image));
   return Response.json({ ...data, imageId, image });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const dref = db.collection("flora").doc(params.id);
+  const data = await dref.get();
+  if(data.exists){
+    const imageId = data.data()!!.image;
+    await storage.ref(imageId).delete();
+  }
+  const result = dref.delete();
+  return Response.json(result);
+}

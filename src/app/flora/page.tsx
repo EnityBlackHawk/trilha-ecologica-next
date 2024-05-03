@@ -88,6 +88,13 @@ export default function Flora() {
     router.push("/flora/" + data_id);
   }
 
+  const onDelete = (data_id : string) => {
+    axios.delete(`/api/flora/${data_id}`).then(() => {
+      setItems(items.filter((e) => e.id != data_id));
+    });
+  
+  }
+
   useEffect(() => {
     axios.get("/api/flora").then((res) => {
       setItems(res.data);
@@ -122,7 +129,7 @@ export default function Flora() {
         </div>
         <div className="grid grid-cols-3 gap-5 p-5">
           {items.map((e) => {
-            return <_Card data={e} onEdit={onEdit} onDelete={(d) => {}}/>;
+            return <_Card data={e} onEdit={onEdit} onDelete={onDelete}/>;
           })}
         </div>
       </div>

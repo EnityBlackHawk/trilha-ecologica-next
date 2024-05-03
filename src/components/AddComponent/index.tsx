@@ -33,11 +33,11 @@ interface AddComponentProps<T extends object> {
   onSave: (
     data: T,
     image: File | null,
-    imageId : string | null,
+    imageId: string | null,
     id: string | null
   ) => Promise<{ id: string }>;
   id: string | null;
-  onCompleted: (() => void) | null ;
+  onCompleted: (() => void) | null;
 }
 
 export default function AddComponent<T extends object>({
@@ -45,7 +45,7 @@ export default function AddComponent<T extends object>({
   baseObject,
   onSave,
   id,
-  onCompleted
+  onCompleted,
 }: AddComponentProps<T>) {
   const [inputData, setInputData] = useState<T>(baseObject);
   const [image, setImage] = useState<File | null>(null);
@@ -56,12 +56,13 @@ export default function AddComponent<T extends object>({
     <div className="w-full flex justify-center items-center flex-row">
       <div className="w-1/2">
         <h1 className="text-main font-bold text-4xl p-4 w-1/2 text-left">
-          Cadastrar Planta
+          {title}
         </h1>
         <div className="grid grid-cols-2 gap-5 p-5">
-          {
+          {Object.keys(baseObject)
+            .sort()
             //@ts-expect-error
-            Object.keys(baseObject).map((e: keyof T, i) => {
+            .map((e: keyof T, i) => {
               if ((baseObject[e] as any)["value"] === undefined) {
                 return;
               }
@@ -87,8 +88,7 @@ export default function AddComponent<T extends object>({
                   />
                 </div>
               );
-            })
-          }
+            })}
           <Button
             component="label"
             role={undefined}
@@ -132,7 +132,7 @@ export default function AddComponent<T extends object>({
             onClick={async () => {
               const o = Object.keys(inputData as object);
               let allValid = true;
-              if ((baseObject as any)['image'] == undefined && image == null) {
+              if ((baseObject as any)["image"] == undefined && image == null) {
                 alert("Please upload an image");
                 allValid = false;
               }
@@ -159,7 +159,7 @@ export default function AddComponent<T extends object>({
                 setImage(null);
               }
               setIsLoading(false);
-              if(id != null && onCompleted != null){
+              if (id != null && onCompleted != null) {
                 onCompleted();
               }
             }}
@@ -168,25 +168,29 @@ export default function AddComponent<T extends object>({
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 justify-center items-center w-1/3">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg">Imagem atual:</h2>
-          <Image
-            src={(baseObject as any)["image"]}
-            alt="Current Image"
-            width={250}
-            height={250}
-          />
-        </div>
-        {qrUrl && (
-          <Image
-            className="border-main_darker border-8 p-2 rounded w-1/2"
-            src={qrUrl}
-            width={200}
-            height={200}
-            alt="Qr Code"
-          />
+      <div className="grid grid-cols-1 justify-center items-center w-1/3 h-full justify-items-center">
+        {id && (
+          <div className="flex flex-col gap-2 f-full h-1/2">
+            <h2 className="text-lg">Imagem atual:</h2>
+            <Image
+              src={(baseObject as any)["image"]}
+              alt="Current Image"
+              width={250}
+              height={250}
+            />
+          </div>
         )}
+        <div className="flex h-full aspect-square">
+          {qrUrl && (
+            <Image
+              className="border-main_darker border-8 p-2 rounded"
+              src={qrUrl}
+              width={200}
+              height={200}
+              alt="Qr Code"
+            />
+          )}
+        </div>
       </div>
       <Backdrop sx={{ color: "#fff" }} open={isLoading}>
         <CircularProgress color="inherit" />
