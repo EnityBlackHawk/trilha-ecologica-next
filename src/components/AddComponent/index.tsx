@@ -32,17 +32,20 @@ interface AddComponentProps<T extends object> {
   baseObject: T;
   onSave: (
     data: T,
-    image: File,
-    id: string | undefined | null
+    image: File | null,
+    imageId : string | null,
+    id: string | null
   ) => Promise<{ id: string }>;
-  id: string | undefined | null;
+  id: string | null;
+  onCompleted: (() => void) | null ;
 }
 
 export default function AddComponent<T extends object>({
   title,
   baseObject,
   onSave,
-  id
+  id,
+  onCompleted
 }: AddComponentProps<T>) {
   const [inputData, setInputData] = useState<T>(baseObject);
   const [image, setImage] = useState<File | null>(null);
@@ -59,13 +62,16 @@ export default function AddComponent<T extends object>({
           {
             //@ts-expect-error
             Object.keys(baseObject).map((e: keyof T, i) => {
+              if ((baseObject[e] as any)["value"] === undefined) {
+                return;
+              }
               return (
                 <div key={i} className="grid grid-cols-1">
                   <h2>{(baseObject[e] as any)["name"]}</h2>
                   <TextField
                     className="text-lg"
                     variant="filled"
-                    value={(baseObject[e] as any)["value"]}
+                    value={(inputData[e] as any)["value"]}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -74,7 +80,7 @@ export default function AddComponent<T extends object>({
                         ...inputData,
                         [e]: {
                           value: c.currentTarget.value,
-                          name: (baseObject[e] as any)["name"],
+                          name: (inputData[e] as any)["name"],
                         },
                       });
                     }}
@@ -126,7 +132,7 @@ export default function AddComponent<T extends object>({
             onClick={async () => {
               const o = Object.keys(inputData as object);
               let allValid = true;
-              if (image == null) {
+              if ((baseObject as any)['image'] == undefined && image == null) {
                 alert("Please upload an image");
                 allValid = false;
               }
@@ -140,7 +146,12 @@ export default function AddComponent<T extends object>({
               if (allValid) {
                 setIsLoading(true);
                 setQrUrl("");
-                const result = await onSave(inputData, image!!, id);
+                const result = await onSave(
+                  inputData,
+                  image,
+                  (baseObject as any)["imageId"] ?? null,
+                  id
+                );
                 setQrUrl(
                   `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
                 );
@@ -148,13 +159,25 @@ export default function AddComponent<T extends object>({
                 setImage(null);
               }
               setIsLoading(false);
+              if(id != null && onCompleted != null){
+                onCompleted();
+              }
             }}
           >
             Salvar
           </Button>
         </div>
       </div>
-      <div className="flex justify-center items-center w-1/3">
+      <div className="grid grid-cols-1 justify-center items-center w-1/3">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-lg">Imagem atual:</h2>
+          <Image
+            src={(baseObject as any)["image"]}
+            alt="Current Image"
+            width={250}
+            height={250}
+          />
+        </div>
         {qrUrl && (
           <Image
             className="border-main_darker border-8 p-2 rounded w-1/2"

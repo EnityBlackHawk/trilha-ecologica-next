@@ -84,8 +84,14 @@ export default function Flora() {
   const [items, setItems] = useState<PlantInfoWithImage[]>([]);
   const router = useRouter();
 
+  const onEdit = (data_id: string) => {
+    router.push("/flora/" + data_id);
+  }
+
   useEffect(() => {
-    setItems(mock);
+    axios.get("/api/flora").then((res) => {
+      setItems(res.data);
+    });
   }, []);
 
   return (
@@ -115,8 +121,8 @@ export default function Flora() {
           </Button>
         </div>
         <div className="grid grid-cols-3 gap-5 p-5">
-          {[1, 2, 3].map((e) => {
-            return <_Card data={mock[0]}/>;
+          {items.map((e) => {
+            return <_Card data={e} onEdit={onEdit} onDelete={(d) => {}}/>;
           })}
         </div>
       </div>

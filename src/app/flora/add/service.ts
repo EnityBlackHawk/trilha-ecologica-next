@@ -3,27 +3,16 @@ import { PlantInfo } from "@/types";
 import axios from "axios";
 import { ref, uploadBytes } from "firebase/storage";
 
-export async function save(data: PlantInfo, image: File, id : string | undefined | null) {
-  const fr = new FileReader();
-  fr.readAsArrayBuffer(image);
-  const byteArray = await image.arrayBuffer();
-  console.log(byteArray.byteLength, (fr.result as ArrayBuffer).byteLength);
+export async function save(data: PlantInfo, image: File | null, imageId : string | null, id : string | undefined | null) {
 
-  // const imageRef = ref(storage, `flora/${data.nomeCientifico.value}`);
-  // const imageUpload = await uploadBytes(imageRef, image, {
-  //   contentType: "image/png",
-  // });
   const formData = new FormData();
-  formData.append("image", image);
-  formData.append("id", id ?? "");
+  if(image != null){
+    formData.append("image", image);
+  }
   formData.append("data", JSON.stringify(data));
 
-  const request = await fetch("/api/flora", {
-    method: "POST",
-    body: formData,
-  });
-  const result = await request.json();
+  const result = await axios.post("/api/flora", formData);
 
   console.log(result);
-  return result;
+  return result.data;
 }
