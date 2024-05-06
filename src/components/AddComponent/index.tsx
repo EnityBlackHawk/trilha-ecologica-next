@@ -13,6 +13,7 @@ import { CloudUpload } from "@mui/icons-material";
 
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "@/../tailwind.config";
+import {FormEventHandler} from "react";
 const { theme } = resolveConfig(tailwindConfig);
 
 const VisuallyHiddenInput = styled("input")({
@@ -52,13 +53,42 @@ export default function AddComponent<T extends object>({
   const [qrUrl, setQrUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const o = Object.keys(inputData);
+    let allValid = true;
+    if ((baseObject as any)["image"] == undefined && image == null) {
+      alert("Please upload an image");
+      allValid = false;
+    }
+    if (allValid) {
+      setIsLoading(true);
+      setQrUrl("");
+      const result = await onSave(
+        inputData,
+        image,
+        (baseObject as any)["imageId"] ?? null,
+        id
+      );
+      setQrUrl(
+        `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
+      );
+      setInputData(baseObject);
+      setImage(null);
+    }
+    setIsLoading(false);
+    if (id != null && onCompleted != null) {
+      onCompleted();
+    }
+  }
+
   return (
     <div className="w-full flex justify-center items-center flex-row">
       <div className="w-1/2">
         <h1 className="text-main font-bold text-4xl p-4 w-1/2 text-left">
           {title}
         </h1>
-        <div className="grid grid-cols-2 gap-5 p-5">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-5 p-5">
           {Object.keys(baseObject)
             .sort()
             //@ts-expect-error
@@ -70,6 +100,7 @@ export default function AddComponent<T extends object>({
                 <div key={i} className="grid grid-cols-1">
                   <h2>{(baseObject[e] as any)["name"]}</h2>
                   <TextField
+                    required={true}
                     className="text-lg"
                     variant="filled"
                     value={(inputData[e] as any)["value"]}
@@ -129,44 +160,11 @@ export default function AddComponent<T extends object>({
                 color: "white",
               },
             }}
-            onClick={async () => {
-              const o = Object.keys(inputData as object);
-              let allValid = true;
-              if ((baseObject as any)["image"] == undefined && image == null) {
-                alert("Please upload an image");
-                allValid = false;
-              }
-              // for (let i = 0; i < o.length; i++) {
-              //   if (inputData[o[i] as keyof PlantInfo].value.length < 1) {
-              //     alert(o[i] as keyof PlantInfo);
-              //     allValid = false;
-              //     break;
-              //   }
-              // }
-              if (allValid) {
-                setIsLoading(true);
-                setQrUrl("");
-                const result = await onSave(
-                  inputData,
-                  image,
-                  (baseObject as any)["imageId"] ?? null,
-                  id
-                );
-                setQrUrl(
-                  `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
-                );
-                setInputData(baseObject);
-                setImage(null);
-              }
-              setIsLoading(false);
-              if (id != null && onCompleted != null) {
-                onCompleted();
-              }
-            }}
+            type="submit"
           >
             Salvar
           </Button>
-        </div>
+        </form>
       </div>
       <div className="grid grid-cols-1 justify-center items-center w-1/3 h-full justify-items-center">
         {id && (
