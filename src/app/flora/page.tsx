@@ -128,8 +128,8 @@ export default function Flora() {
           </Button>
         </div>
         <div className="grid grid-cols-3 gap-5 p-5">
-          {items.map((e) => {
-            return <_Card data={e} onEdit={onEdit} onDelete={onDelete}/>;
+          {items.map((e, i) => {
+            return <_Card data={e} key={i} onEdit={onEdit} onDelete={onDelete}/>;
           })}
         </div>
       </div>
