@@ -13,7 +13,7 @@ import { CloudUpload } from "@mui/icons-material";
 
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "@/../tailwind.config";
-import {FormEventHandler} from "react";
+import { FormEventHandler } from "react";
 const { theme } = resolveConfig(tailwindConfig);
 
 const VisuallyHiddenInput = styled("input")({
@@ -38,8 +38,12 @@ interface AddComponentProps<T extends object> {
     id: string | null
   ) => Promise<{ id: string }>;
   id: string | null;
+  showQr?: boolean;
   onCompleted: (() => void) | null;
 }
+
+const qrLink = (id: string) =>
+  `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${id}`;
 
 export default function AddComponent<T extends object>({
   title,
@@ -47,13 +51,15 @@ export default function AddComponent<T extends object>({
   onSave,
   id,
   onCompleted,
+  showQr,
 }: AddComponentProps<T>) {
   const [inputData, setInputData] = useState<T>(baseObject);
   const [image, setImage] = useState<File | null>(null);
-  const [qrUrl, setQrUrl] = useState<string>("");
+  const [qrUrl, setQrUrl] = useState<string>(showQr && id ? qrLink(id) : "");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit : FormEventHandler<HTMLFormElement> = async (e) => {
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const o = Object.keys(inputData);
     let allValid = true;
@@ -70,9 +76,7 @@ export default function AddComponent<T extends object>({
         (baseObject as any)["imageId"] ?? null,
         id
       );
-      setQrUrl(
-        `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${result.id}`
-      );
+      setQrUrl(qrLink(result.id));
       setInputData(baseObject);
       setImage(null);
     }
@@ -80,7 +84,7 @@ export default function AddComponent<T extends object>({
     if (id != null && onCompleted != null) {
       onCompleted();
     }
-  }
+  };
 
   return (
     <div className="w-full flex justify-center items-center flex-row">
@@ -166,9 +170,9 @@ export default function AddComponent<T extends object>({
           </Button>
         </form>
       </div>
-      <div className="grid grid-cols-1 justify-center items-center w-1/3 h-full justify-items-center">
+      <div className="grid grid-cols-1 items-center w-1/3 h-fit gap-5 justify-items-center">
         {id && (
-          <div className="flex flex-col gap-2 f-full h-1/2">
+          <div className="flex flex-col gap-2">
             <h2 className="text-lg">Imagem atual:</h2>
             <Image
               src={(baseObject as any)["image"]}
@@ -178,7 +182,7 @@ export default function AddComponent<T extends object>({
             />
           </div>
         )}
-        <div className="flex h-full aspect-square">
+        <div className="flex aspect-square">
           {qrUrl && (
             <Image
               className="border-main_darker border-8 p-2 rounded"

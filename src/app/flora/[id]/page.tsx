@@ -27,6 +27,7 @@ export default function EditFloraPage({params} : {params: {id: string}}) {
           baseObject={data!!}
           onSave={update}
           id={params.id}
+          showQr={true}
           onCompleted={() => {router.push("/flora")}}
         />
       );

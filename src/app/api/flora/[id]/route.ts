@@ -12,16 +12,22 @@ export async function PUT(request: NextRequest, {params} : {params : {id : strin
   const image = form.get("image") as File | null;
   const imageId = form.get("imageId") as string;
   const path = imageId;
-
+  let base64 : string | null = null;
 
   if(image) {
-    const imageRef = ref(storage, path);
-    const result = await uploadBytes(imageRef, image, {
-      contentType: image.type
-    });
+    // const imageRef = ref(storage, path);
+    // const result = await uploadBytes(imageRef, image, {
+    //   contentType: image.type
+    // });
+
+    const buffer = await image.arrayBuffer();
+    base64 = `data:${image.type || "image/png"};base64,${Buffer.from(
+      buffer
+    ).toString("base64")}`;
+
   }
 
-  const result = await db.collection("flora").doc(params.id).update({...pi, image: path});
+  const result = await db.collection("flora").doc(params.id).update({...pi, image: base64});
   return Response.json({id : params.id})
 }
 
@@ -34,9 +40,9 @@ export async function GET(
     return Response.json({});
   }
   const data = result.data()!!;
-  const imageId = data.image;
-  const image =  await getDownloadURL(ref(storage, data.image));
-  return Response.json({ ...data, imageId, image });
+  // const imageId = data.image;
+  // const image =  await getDownloadURL(ref(storage, data.image));
+  return Response.json({ ...data });
 }
 
 export async function DELETE(
@@ -44,11 +50,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const dref = db.collection("flora").doc(params.id);
-  const data = await dref.get();
-  if(data.exists){
-    const imageId = data.data()!!.image;
-    await storage.ref(imageId).delete();
-  }
+  // const data = await dref.get();
+  // if(data.exists){
+  //   const imageId = data.data()!!.image;
+  //   await storage.ref(imageId).delete();
+  // }
   const result = dref.delete();
   return Response.json(result);
 }

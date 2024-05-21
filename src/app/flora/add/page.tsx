@@ -65,6 +65,7 @@ export default function Home() {
       baseObject={objPlantInfo}
       onSave={save}
       id={null}
+      showQr={false}
       onCompleted={() => {
         router.push("/flora");
       }}

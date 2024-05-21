@@ -15,20 +15,25 @@ export async function POST(request: NextRequest) {
 
   let path = `flora/${random.generate()}`;
 
-  const imageRef = ref(storage, path);
-  const prefix = (await listAll(ref(storage, "flora/"))).items.map((e) => e.fullPath);
+  const buffer = await image.arrayBuffer();
+  const base64 = `data:${
+    image.type || "image/png"
+  };base64,${Buffer.from(buffer).toString("base64")}`;
 
-  while(prefix.some((e) => e == path)){
-    path = `flora/${random.generate()}`;
-  }
+  // const imageRef = ref(storage, path);
+  // const prefix = (await listAll(ref(storage, "flora/"))).items.map((e) => e.fullPath);
 
-  const imageUpload = await uploadBytes(imageRef, image, {
-    contentType: image.type,
-  });
+  // while(prefix.some((e) => e == path)){
+  //   path = `flora/${random.generate()}`;
+  // }
+
+  // const imageUpload = await uploadBytes(imageRef, image, {
+  //   contentType: image.type,
+  // });
 
   const result = await db.collection("flora").add({
     ...pi,
-    image: path,
+    image: base64,
   });
   
   return Response.json({ id: result.id });
@@ -41,9 +46,9 @@ export async function GET() {
   const data = result.docs.map((e) => {
     return { ...e.data(), id: e.id };
   });
-  const data_i = data.map(async (e: any) => {
-    const image = await getDownloadURL(ref(storage, e.image));
-    return { ...e, imageId : e.image,  image };
-  });
-  return Response.json(await Promise.all(data_i));
+  // const data_i = data.map(async (e: any) => {
+  //   const image = await getDownloadURL(ref(storage, e.image));
+  //   return { ...e, imageId : e.image,  image };
+  // });
+  return Response.json(data);
 }

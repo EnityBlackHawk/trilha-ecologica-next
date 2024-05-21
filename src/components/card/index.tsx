@@ -23,7 +23,7 @@ export default function _Card({
   return (
     <Card>
       <CardMedia sx={{ height: 140, overflow: "hidden" }}>
-        <Image
+        <img
           src={data.image}
           alt={data.nomeCientifico.value}
           width={500}
