@@ -26,8 +26,12 @@ export async function PUT(request: NextRequest, {params} : {params : {id : strin
     ).toString("base64")}`;
 
   }
+  const obj = {...pi};
+  if(base64){
+    obj.image = base64;
+  }
 
-  const result = await db.collection("flora").doc(params.id).update({...pi, image: base64});
+  const result = await db.collection("flora").doc(params.id).update(obj);
   return Response.json({id : params.id})
 }
 
