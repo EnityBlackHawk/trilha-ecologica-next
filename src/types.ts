@@ -1,4 +1,5 @@
 export interface PlantInfo {
+  classTaxonomica: { value: string; name: string };
   nomeCientifico: { value: string; name: string };
   grauAmeaca: { value: string; name: string };
   nomePopular: { value: string; name: string };
@@ -15,6 +16,7 @@ export interface PlantInfo {
 };
 
 export interface AnimalInfo {
+  classTaxonomica: { value: string; name: string };
   nomeCientifico: { value: string; name: string };
   grauAmeaca: { value: string; name: string };
   nomePopular: { value: string; name: string };

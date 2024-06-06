@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 
 
 const objPlantInfo: PlantInfo = {
+  classTaxonomica: { value: "", name: "Class Taxonomica" },
   nomeCientifico: { value: "", name: "Nome Cientifico" },
   grauAmeaca: { value: "", name: "Grau Ameaca" },
   nomePopular: { value: "", name: "Nome Popular" },
