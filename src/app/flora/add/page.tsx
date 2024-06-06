@@ -39,21 +39,19 @@ classTaxonomica: "Gimnosperma",
 */
 
 const objPlantInfo: PlantInfo = {
-  classTaxonomica: { value: "", name: "Class Taxonomica" },
-  familiaBotanica: { value: "", name: "Familia Botanica" },
+  nomeCientifico: { value: "", name: "Nome Cientifico" },
   grauAmeaca: { value: "", name: "Grau Ameaca" },
   nomePopular: { value: "", name: "Nome Popular" },
-  nomeCientifico: { value: "", name: "Nome Cientifico" },
-  biomaEstados: { value: "", name: "Bioma Estados" },
-  extratoVertical: { value: "", name: "Extrato Vertical" },
-  populacao: { value: "", name: "Populacao" },
-  DAP: { value: "", name: "DAP" },
-  solos: { value: "", name: "Solos" },
-  idadeMaxima: { value: "", name: "Idade Maxima" },
-  altitude: { value: "", name: "Altitude" },
-  dispersores: { value: "", name: "Dispersores" },
-  estagio: { value: "", name: "Estagio" },
-  produtos: { value: "", name: "Produtos" },
+  bioma: { value: "", name: "Bioma" },
+  fitofisionomia: { value: "", name: "Fitofisionomia" },
+  altura: { value: "", name: "Altura" },
+  diametro: { value: "", name: "Diametro" },
+  habitat: { value: "", name: "Habitat" },
+  longevidade: { value: "", name: "Longevidade" },
+  dispersao: { value: "", name: "Dispersao" },
+  uso: { value: "", name: "Uso" },
+  polinizacao: { value: "", name: "Polinizacao" },
+  gs: { value: "", name: "Gs" },
 };
 
 export default function Home() {
