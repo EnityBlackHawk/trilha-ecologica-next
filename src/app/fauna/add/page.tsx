@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { save } from "./service";
 
 const animalInfo: AnimalInfo = {
+  tipo: { value: "", name: "Tipo" },
   classTaxonomica: { value: "", name: "Class Taxonomica" },
   nomeCientifico: { value: "", name: "Nome Cientifico" },
   grauAmeaca: { value: "", name: "Grau Ameaca" },

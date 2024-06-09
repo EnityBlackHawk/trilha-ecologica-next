@@ -16,6 +16,7 @@ export interface PlantInfo {
 };
 
 export interface AnimalInfo {
+  tipo: { value: string; name: string}
   classTaxonomica: { value: string; name: string };
   nomeCientifico: { value: string; name: string };
   grauAmeaca: { value: string; name: string };
