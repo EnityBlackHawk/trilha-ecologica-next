@@ -21,7 +21,7 @@ export default function EditFloraPage({ params }: { params: { id: string } }) {
   if (data) {
     return (
       <AddComponent
-        title="Editar Planta"
+        title="Editar Animal"
         baseObject={data!!}
         onSave={update}
         id={params.id}
